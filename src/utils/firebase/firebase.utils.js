@@ -3,7 +3,8 @@ import {
     getAuth,
     signInWithRedirect,
     signInWithPopup,
-    GoogleAuthProvider
+    GoogleAuthProvider,
+    createUserWithEmailAndPassword,
 } from "firebase/auth";
 
 import {
@@ -34,6 +35,7 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 
+//there could be multiple different providers(ie, facebook,github,linkedin etc) but in this example, we'll be using google.
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({
     prompt: "select_account"
@@ -43,9 +45,12 @@ export const auth = getAuth();
 
 export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 
+export const signInWithGoogleRedirect = () => signInWithRedirect(auth, provider);
+
 export const db = getFirestore();
 
 export const createUserDocumentFromAuth = async (userAuth) => {
+    if (!userAuth) return;
     const userDocRef = doc(db, 'users', userAuth.uid);
 
     console.log(userDocRef);
@@ -72,3 +77,11 @@ export const createUserDocumentFromAuth = async (userAuth) => {
     //else return userDocRef
     return userDocRef;
 }
+
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+    if (!email || !password) {
+        return;
+    }
+    return await createUserWithEmailAndPassword(auth, email, password);
+};
+
