@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,  } from "react";
 import Button from "../button/button.component";
 import FormInput from "../form-input/form-input.component";
 import "./sign-up-form.styles.scss";
@@ -32,6 +32,7 @@ const SignUpForm = () => {
                 ...user,
                 displayName,
             });
+
             resetForm();
         } catch (error) {
             if (error.code === 'auth/email-already-in-use') {
