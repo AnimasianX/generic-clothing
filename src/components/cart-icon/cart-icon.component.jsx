@@ -5,11 +5,11 @@ import { useContext } from "react";
 const CartIcon = () => {
     const { isToggled, setIsToggled, cartItems } = useContext(CartContext);
     const toggleIsCartOpen = () => setIsToggled(!isToggled);
-    const getQuantity = () => cartItems.reduce((sum, { quantity }) => sum + quantity, 0);
+    const cartQuantity = cartItems.reduce((sum, { quantity }) => sum + quantity, 0);
     return (
         <div className="cart-icon-container" onClick={toggleIsCartOpen}>
             <ShoppingIcon className="shopping-icon" />
-            <span className="item-count">{getQuantity()}</span>
+            <span className="item-count">{cartQuantity}</span>
         </div>
     )
 }

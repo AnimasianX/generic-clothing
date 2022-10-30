@@ -23,7 +23,7 @@ const Navigation = () => {
                 <Link className="logo-container" to={'/'}>
                     <img src={CLogo} alt="Calcifer inc co." className="logo" />
                 </Link>
-
+                <Link to={'/checkout'}></Link>
                 <div className="nav-links-container">
                     <Link className="nav-link" to='/shop'>
                         SHOP
