@@ -15,33 +15,33 @@ const addCartItem = (cartItems, product) => {
     return [...cartItems, { ...product, quantity: 1 }];
 }
 
-const decrementCartItem = (cartItems, product)=>{
+const decrementCartItem = (cartItems, product) => {
     //find if cart item contains product
     const itemExist = cartItems.find(({ id }) => id === product.id);
     //if found, decrease quantity
 
-    if(itemExist && itemExist.quantity > 1){
-        return cartItems.map((cartItem)=> cartItem.id === product.id ?
-        {...cartItem, quantity: cartItem.quantity - 1}
-        : cartItem);
-    }else{
+    if (itemExist && itemExist.quantity > 1) {
+        return cartItems.map((cartItem) => cartItem.id === product.id ?
+            { ...cartItem, quantity: cartItem.quantity - 1 }
+            : cartItem);
+    } else {
         //removes if quantity is not greater than 1
-        return cartItems.filter((cartItem)=> cartItem.id !== product.id);
+        return cartItems.filter((cartItem) => cartItem.id !== product.id);
     }
 
 }
 
 //removes a whole item from cart rather than decreasing.
-const removeItemFromCart = (cartItems, product)=>{
-    const newArray = cartItems.filter((cartItem)=> cartItem.id !== product.id);
+const removeItemFromCart = (cartItems, product) => {
+    const newArray = cartItems.filter((cartItem) => cartItem.id !== product.id);
     return newArray;
 }
 
 export const CartContext = createContext({
     cartItems: null,
     addItemToCart: () => { },
-    decrementCartItem : () =>{},
-    removeItemFromCart: () =>{},
+    decrementCartItem: () => { },
+    removeItemFromCart: () => { },
     isToggled: null,
     setIsToggled: () => { },
 });
@@ -56,13 +56,13 @@ export const CartProvider = ({ children }) => {
     }
 
     const decrementItemFromCart = (product) => {
-        setCartItems(decrementCartItem(cartItems,product));
+        setCartItems(decrementCartItem(cartItems, product));
     }
 
-    const removeProductFromCart = (product) =>{
-        setCartItems(removeItemFromCart(cartItems,product));
+    const removeProductFromCart = (product) => {
+        setCartItems(removeItemFromCart(cartItems, product));
     }
-    const value = { cartItems, addItemToCart,decrementItemFromCart,removeProductFromCart, isToggled, setIsToggled };
+    const value = { cartItems, addItemToCart, decrementItemFromCart, removeProductFromCart, isToggled, setIsToggled };
 
 
 
