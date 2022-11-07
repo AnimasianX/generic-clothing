@@ -1,5 +1,5 @@
-import { createContext, useState, } from "react";
-
+import { createContext, useState, useReducer} from "react";
+import { createAction } from '../utils/reducer/reducer.utils';
 
 const addCartItem = (cartItems, product) => {
     //find if cart items contains product to add
@@ -46,21 +46,67 @@ export const CartContext = createContext({
     setIsToggled: () => { },
 });
 
+export const CART_ACTION_TYPES = {
+    SET_CART_ITEMS: 'SET_CART_ITEMS',
+    SET_IS_CART_OPEN: 'SET_IS_CART_OPEN',
+}
+
+const cartReducer = (state, action) =>{
+    const {type, payload} = action;
+    
+    switch(type){
+        case CART_ACTION_TYPES.SET_CART_ITEMS:
+            return{
+                ...state,
+                ...payload
+            }
+        case CART_ACTION_TYPES.SET_IS_CART_OPEN:
+            return{
+                 ...state,
+                 isToggled: payload
+            }
+        default:
+            throw new Error(`Unhandled error of ${type} in cart context `);
+    }
+}
+
+const INITIAL_STATE = {
+    cartItems: []  ,
+    isToggled: false ,
+}
+
 export const CartProvider = ({ children }) => {
-    const [cartItems, setCartItems] = useState([]);
-    const [isToggled, setIsToggled] = useState(false);
+    // const [cartItems, setCartItems] = useState([]);
+    // const [isToggled, setIsToggled] = useState(false);
+    const [{cartItems, isToggled} , dispatch ] = useReducer(cartReducer, INITIAL_STATE);
+
+    
+
+    const updateCartItemsReducer = (cartItems) =>{
+        const payload = {
+            cartItems,
+        }
+        dispatch(createAction(CART_ACTION_TYPES.SET_CART_ITEMS, payload))
+    }
+
+    const setIsToggled = (bool) =>{
+
+        dispatch(createAction(CART_ACTION_TYPES.SET_IS_CART_OPEN,bool))
+   }
 
     const addItemToCart = (product) => {
-
-        setCartItems(addCartItem(cartItems, product));
+        const newCartItems = addCartItem(cartItems,product);
+        updateCartItemsReducer(newCartItems);
     }
 
     const decrementItemFromCart = (product) => {
-        setCartItems(decrementCartItem(cartItems, product));
+        const newCartItems = decrementCartItem(cartItems, product);
+        updateCartItemsReducer(newCartItems);
     }
 
     const removeProductFromCart = (product) => {
-        setCartItems(removeItemFromCart(cartItems, product));
+        const newCartItems = removeItemFromCart(cartItems,product);
+        updateCartItemsReducer(newCartItems);
     }
     const value = { cartItems, addItemToCart, decrementItemFromCart, removeProductFromCart, isToggled, setIsToggled };
 
