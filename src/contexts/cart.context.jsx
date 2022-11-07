@@ -1,6 +1,10 @@
 import { createContext, useState, useReducer} from "react";
 import { createAction } from '../utils/reducer/reducer.utils';
 
+//main point of a reducer is to make it easier to update multiple objects in our state. 
+//for example if we were to have cartCount and cartTotal, we would want to use reducers instead of 
+//usestate because it would be easier to 
+
 const addCartItem = (cartItems, product) => {
     //find if cart items contains product to add
     const itemExist = cartItems.find(({ id }) => id === product.id);
@@ -46,24 +50,27 @@ export const CartContext = createContext({
     setIsToggled: () => { },
 });
 
-export const CART_ACTION_TYPES = {
+export const CART_ACTION_TYPES = { //Cart action types - User defined
     SET_CART_ITEMS: 'SET_CART_ITEMS',
     SET_IS_CART_OPEN: 'SET_IS_CART_OPEN',
 }
 
-const cartReducer = (state, action) =>{
+const cartReducer = (state, action) =>{// 
     const {type, payload} = action;
     
     switch(type){
         case CART_ACTION_TYPES.SET_CART_ITEMS:
             return{
-                ...state,
-                ...payload
+                ...state,//state in this case will include all other variables we declare in our initial state
+                //payload in this case is what we want to update in the state - in our case, the cart items. 
+                //everything else will remain in the previous state unless changed in the case below 
+                //where we check if we want to show cart based off of user clicks.
+                ...payload//updates cart 
             }
         case CART_ACTION_TYPES.SET_IS_CART_OPEN:
             return{
-                 ...state,
-                 isToggled: payload
+                 ...state,//cart remains the same
+                 isToggled: payload//toggle changes from true -> false and vice versa
             }
         default:
             throw new Error(`Unhandled error of ${type} in cart context `);
@@ -96,12 +103,15 @@ export const CartProvider = ({ children }) => {
 
     const addItemToCart = (product) => {
         const newCartItems = addCartItem(cartItems,product);
-        updateCartItemsReducer(newCartItems);
+        updateCartItemsReducer(newCartItems);//when we add new item to cart, we call this reducer to 
+        //dispatch a new action to update the state with our new items in the cart
     }
 
     const decrementItemFromCart = (product) => {
         const newCartItems = decrementCartItem(cartItems, product);
-        updateCartItemsReducer(newCartItems);
+        updateCartItemsReducer(newCartItems);// when we decrease item from the cart, we call reducer to 
+        //dispatch new action to update the current states cart with new values for new state.
+        //this function basically decrease quantity from the cart and then sets new state with updated quantity value.
     }
 
     const removeProductFromCart = (product) => {
